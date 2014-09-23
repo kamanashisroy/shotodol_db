@@ -1,0 +1,8 @@
+
+# This shakefile is parsed by shotodol make module 
+
+onLoad:
+	fileconf -i ./autoload/shotodol.conf
+	rehash
+
+
