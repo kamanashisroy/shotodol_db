@@ -1,7 +1,7 @@
 Shotodol db
 =============
 
-Simple nosql database.
+Simple nosql database for shotodol.
 
 ### DB modules
 

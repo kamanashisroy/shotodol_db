@@ -1,0 +1,4 @@
+libs/bundle
+core/base
+-SHOTODOL_DB_HOME
+libs/db

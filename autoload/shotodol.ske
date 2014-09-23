@@ -3,6 +3,9 @@
 
 onLoad:
 	fileconf -i ./autoload/shotodol.conf
+	module -load libs/memorydb/dynalib.so
+	module -load libs/filedb/dynalib.so
+	module -load libs/dbextra/dynalib.so
 	rehash
 
 

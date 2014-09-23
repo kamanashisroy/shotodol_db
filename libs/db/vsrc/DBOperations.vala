@@ -5,6 +5,11 @@ using shotodol;
  *  @{
  */
 public abstract class shotodol.db.DBOperations : Replicable {
+	public virtual int insert(DBEntry entry, DBId*newId) {
+		core.die("unimplemented");
+		return 0;
+	}
+	
 	public virtual int save(DBId id, DBEntry entry) {
 		core.die("unimplemented");
 		return 0;

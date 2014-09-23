@@ -1,0 +1,4 @@
+core/base
+libs/make100
+-SHOTODOL_DB_HOME
+libs/db

@@ -1,18 +1,27 @@
 using aroop;
 using shotodol;
+using shotodol.db;
 
-/** \addtogroup db
+/** \addtogroup memorydb
  *  @{
  */
-public class shotodol.db.MemoryDB : DB {
+internal class shotodol.memorydb.MemoryDBHashMap : DB {
 	SearchableSet<DBEntry>db;
-	public MemoryDB(DB.DBType tp, extring*address) {		
+	public MemoryDBHashMap() {		
 		db = SearchableSet<DBEntry>();
 	}
 	
-	~MemoryDB() {		
+	~MemoryDBHashMap() {		
 		db.destroy();
 	}
+
+#if false
+	public override int insert(DBEntry entry, DBId*newId) {
+		core.die("unimplemented");
+		db.addPointer(entry, id.hash);
+		return 0;
+	}
+#endif
 	
 	public override int save(DBId id, DBEntry entry) {
 		db.addPointer(entry, id.hash);
