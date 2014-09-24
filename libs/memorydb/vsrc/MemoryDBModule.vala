@@ -17,6 +17,7 @@ public class shotodol.memorydb.MemoryDBModule : DynamicModule {
 	}
 
 	public override int init() {
+		DBEntryFactory.init();
 		extring entry = extring.set_static_string("db/memory/incremental");
 		Plugin.register(&entry, new HookExtension(onBuildMemoryDBIncrementalHook, this));
 		entry.rebuild_and_set_static_string("db/memory/hashmap");
@@ -42,6 +43,7 @@ public class shotodol.memorydb.MemoryDBModule : DynamicModule {
 		return 0;
 	}
 	public override int deinit() {
+		DBEntryFactory.deinit();
 		base.deinit();
 		return 0;
 	}

@@ -19,6 +19,8 @@ public class shotodol.db.DBExtraModule : DynamicModule {
 	public override int init() {
 		extring entry = extring.set_static_string("command");
 		Plugin.register(&entry, new M100Extension(new DBCommand(), this));
+		entry.rebuild_and_set_static_string("unittest");
+		Plugin.register(&entry, new AnyInterfaceExtension(new DBExtraTest(), this));
 		return 0;
 	}
 	public override int deinit() {

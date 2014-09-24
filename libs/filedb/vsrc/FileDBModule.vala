@@ -17,9 +17,9 @@ public class shotodol.filedb.FileDBModule : DynamicModule {
 	}
 
 	public override int init() {
-		extring entry = extring.set_static_string("db/memory/incremental");
+		extring entry = extring.set_static_string("db/filedb/incremental");
 		Plugin.register(&entry, new HookExtension(onBuildFileDBIncrementalHook, this));
-		entry.rebuild_and_set_static_string("db/memory/hashmap");
+		entry.rebuild_and_set_static_string("db/filedb/hashmap");
 		Plugin.register(&entry, new HookExtension(onBuildFileDBHashMapHook, this));
 		return 0;
 	}
@@ -27,7 +27,7 @@ public class shotodol.filedb.FileDBModule : DynamicModule {
 		if(msg == null)
 			return 0;
 		extring dbentry = extring.stack(128);
-		dbentry.concat_string("db/memory/incremental/");
+		dbentry.concat_string("db/filedb/incremental/");
 		dbentry.concat(msg);
 		Plugin.register(&dbentry, new AnyInterfaceExtension(new FileDBIncremental(), this));
 		return 0;
@@ -36,7 +36,7 @@ public class shotodol.filedb.FileDBModule : DynamicModule {
 		if(msg == null)
 			return 0;
 		extring dbentry = extring.stack(128);
-		dbentry.concat_string("db/memory/hashmap/");
+		dbentry.concat_string("db/filedb/hashmap/");
 		dbentry.concat(msg);
 		Plugin.register(&dbentry, new AnyInterfaceExtension(new FileDBHashMap(), this));
 		return 0;
