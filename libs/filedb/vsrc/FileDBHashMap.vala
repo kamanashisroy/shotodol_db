@@ -6,7 +6,20 @@ using shotodol.db;
  *  @{
  */
 public class shotodol.filedb.FileDBHashMap : DB {
-	public FileDBHashMap() {
+	extring dbname;
+	extring tblname;
+	public FileDBHashMap(extring*giventbl = null) {
+		dbname = extring.set_static_string("hashmap");
+		tblname = extring.set_static_string("default");
+		if(giventbl != null && !giventbl.is_empty()) {
+			extring token = extring();
+			extring inp = extring.stack(giventbl.length());
+			inp.concat(giventbl);
+			LineAlign.next_token(&inp, &token);
+			dbname.rebuild_and_copy_on_demand(&token);
+			if(!inp.is_empty())
+				tblname.rebuild_and_copy_on_demand(&inp);
+		}
 	}
 	~FileDBHashMap() {
 	}

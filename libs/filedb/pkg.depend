@@ -1,5 +1,7 @@
 libs/bundle
+libs/str_arms
 core/base
 OS_PLATFORM/platform_extra
+OS_PLATFORM/platform_fileutils
 -SHOTODOL_DB_HOME
 libs/db

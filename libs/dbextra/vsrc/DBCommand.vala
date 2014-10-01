@@ -11,6 +11,7 @@ internal class shotodol.db.DBCommand : M100Command {
 		VIEW,
 		KEY,
 		VALUE,
+		DB_STR,
 	}
 	public DBCommand() {
 		var prefix = extring.set_static_string("db");
@@ -19,18 +20,44 @@ internal class shotodol.db.DBCommand : M100Command {
 		addOptionString("-v", M100Command.OptionType.NONE, Options.VIEW, "View db content"); 
 		addOptionString("-nm", M100Command.OptionType.TXT, Options.KEY, "Key name"); 
 		addOptionString("-val", M100Command.OptionType.TXT, Options.VALUE, "Value"); 
+		addOptionString("-dbstr", M100Command.OptionType.TXT, Options.DB_STR, "Database string denoted as db/memory/incremental/dbname/tablename or db/filedb/incremental/dbname/tablename "); 
 	}
-	DB? getDB() {
+	DB? getDB(extring*dbstr = null) {
 		extring dbpath = extring.set_static_string("db/memory/incremental/shake");
+		if(dbstr != null) {
+			dbpath.rebuild_and_copy_shallow(dbstr);
+		}
 		DB?db = null;
 		Plugin.acceptVisitor(&dbpath, (x) => {
 			db = (DB)x.getInterface(null);
 		});
 		if(db == null) {
-			extring dbspace = extring.set_static_string("db/memory/incremental");
-			extring dbname = extring.set_static_string("shake");
-			extring unused = extring();
-			Plugin.swarm(&dbspace, &dbname, &unused);
+			extring dupdb = extring.stack(dbpath.length()+1);
+			dupdb.concat(&dbpath);
+			extring memoryspace = extring.set_static_string("db/memory/incremental");
+			dupdb.setLength(memoryspace.length());
+			extring dbname = extring.copy_shallow(&dbpath);
+			if(memoryspace.equals(&dupdb)) {
+				dbname.shift(dupdb.length()+1);
+				if(dbname.is_empty()) {
+					dbname.rebuild_and_set_static_string("shake");
+				}
+				extring unused = extring();
+				Plugin.swarm(&memoryspace, &dbname, &unused);
+			} else {
+				dbname.shift(dupdb.length()+1);
+				if(dbname.is_empty()) {
+					dbname.rebuild_and_set_static_string("shake");
+				}
+				dupdb.setLength(0);
+				dupdb.concat(&dbpath);
+				extring filespace = extring.set_static_string("db/filedb/incremental");
+				dupdb.setLength(filespace.length());
+				if(filespace.equals(&dupdb)) {
+					extring unused = extring();
+					Plugin.swarm(&filespace, &dbname, &unused);
+				}
+			}
 		}
 		Plugin.acceptVisitor(&dbpath, (x) => {
 			db = (DB)x.getInterface(null);
@@ -46,9 +73,16 @@ internal class shotodol.db.DBCommand : M100Command {
 		if(ex != null) {
 			DB?db = null;
 			DBId dbd = DBId();
-			db = getDB();
-			if(db == null)
+			xtring?dbstr = vals[Options.DB_STR];
+			db = getDB(dbstr);
+			if(db == null) {
+#if DB_DEBUG
+				extring dlg = extring.stack(128);
+				dlg.printf("Could not create db:[%s]\n", dbstr.fly().to_string());
+				Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.LOG, 0, 0, &dlg);
+#endif
 				return 0;
+			}
 			dbd.hash = 10;
 			xtring?nm = vals[Options.KEY];
 			xtring?vl = vals[Options.VALUE];
