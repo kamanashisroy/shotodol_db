@@ -48,26 +48,45 @@ function filedb_readfile($file) {
 		return 0;
 	}
 
-	public static int getDBIndex(extring*tbldir) {
-		int index = 0;
+	public static int readEntryFromBinaryFile(extring*filepath, Bag content) {
+		filepath.zero_terminate();
+		FileInputStream?fi = new FileInputStream.from_file(filepath);
+		if(fi == null) {
+#if DB_DEBUG
+			extring dlg = extring.stack(filepath.length()+32);
+			dlg.printf("Unable to open file for reading:[%d][%s]\n", filepath.length(), filepath.to_string());
+			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
+#endif
+			return -1;
+		}
+		extring data = extring();
+		content.getContentAs(&data);
+		fi.read(&data);
+		content.size = data.length();
+		fi.close();
+		return 0;
+	}
+
+	public static aroop_hash getDBIndex(extring*tbldir) {
+		aroop_hash index = 0;
 		extring infofile = extring.stack(tbldir.length()+32); 
 		infofile.concat(tbldir);
 		infofile.concat_string("/info.bin");
 		if(FileUtil.exists(&infofile)) {
 			extring content = extring();
 			readBinaryFile(&infofile, &content);
-			index = content.to_int();
+			index = content.to_int(); // TODO use to_long_int()
 		}
 		return index;
 	}
 
 
-	public static int autoIncrement(extring*tbldir) {
-		int index = getDBIndex(tbldir);
+	public static aroop_hash autoIncrement(extring*tbldir) {
+		aroop_hash index = getDBIndex(tbldir);
 		index++;
 		// TODO check if the file value is index before setting. Or open the file for writing before reading .. make it atomic .
 		extring content = extring.stack(64);
-		content.printf("%d\r\n", index);
+		content.printf("%u\r\n", index);
 		extring infofile = extring.stack(tbldir.length()+32); 
 		infofile.concat(tbldir);
 		infofile.concat_string("/info.bin");
@@ -104,7 +123,7 @@ function filedb_writefile($file, $x) {
 		return 0;
 	}
 
-	public static int writeEntryToBinaryFile(extring*filepath, DBEntry content) {
+	public static int writeEntryToBinaryFile(extring*filepath, Bag content) {
 		filepath.zero_terminate();
 		FileOutputStream?fo = new FileOutputStream.from_file(filepath);
 		if(fo == null) {
@@ -116,14 +135,14 @@ function filedb_writefile($file, $x) {
 			return -1;
 		}
 		extring data = extring();
-		content.copyAs(&data);
+		content.getContentAs(&data);
 		fo.write(&data);
 		fo.close();
 		return 0;
 	}
 
 
-	public static int buildTableDir(extring*db, extring*tbl, extring*outtbl) {
+	public static int buildTableDir(extring*db, extring*tbl, extring*outtbl, bool create = false) {
 #if DB_DEBUG
 		extring dlg = extring.stack(128);
 		dlg.printf("Building db:[%d][%s], tbl:[%d][%s]\n", db.length(), db.to_string(), tbl.length(), tbl.to_string());
@@ -131,7 +150,7 @@ function filedb_writefile($file, $x) {
 #endif
 		outtbl.destroy();
 		extring FILEDB_HOME = extring.set_static_string(".data");
-		if(!FileUtil.exists(&FILEDB_HOME) && !FileUtil.mkdir(&FILEDB_HOME, 0777)) {
+		if(!FileUtil.exists(&FILEDB_HOME) && !create && !FileUtil.mkdir(&FILEDB_HOME, 0777)) {
 #if DB_DEBUG
 			dlg.printf("Failed to create directory:[%d][%s]\n", FILEDB_HOME.length(), FILEDB_HOME.to_string());
 			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
@@ -143,7 +162,7 @@ function filedb_writefile($file, $x) {
 		dir.concat_char('/');
 		dir.concat(db);
 		dir.zero_terminate(); // this is important
-		if(!FileUtil.exists(&dir) && !FileUtil.mkdir(&dir, 0777)) {
+		if(!FileUtil.exists(&dir) && !create && !FileUtil.mkdir(&dir, 0777)) {
 #if DB_DEBUG
 			dlg.printf("Failed to create directory:[%d][%s]\n", dir.length(), dir.to_string());
 			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
@@ -153,7 +172,7 @@ function filedb_writefile($file, $x) {
 		dir.concat_char('/');
 		dir.concat(tbl);
 		dir.zero_terminate(); // this is important
-		if(!FileUtil.exists(&dir) && !FileUtil.mkdir(&dir, 0777)) {
+		if(!FileUtil.exists(&dir) && !create && !FileUtil.mkdir(&dir, 0777)) {
 #if DB_DEBUG
 			dlg.printf("Failed to create directory:[%d][%s]\n", dir.length(), dir.to_string());
 			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);

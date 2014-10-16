@@ -9,7 +9,8 @@ using shotodol_platform_fileutils;
 public class shotodol.filedb.FileDBIncremental : DB {
 	extring dbname;
 	extring tblname;
-	public FileDBIncremental(extring*giventbl = null) {
+	BagFactoryImpl bags;
+	public FileDBIncremental(extring*giventbl = null, BagFactoryImpl bgf) {
 		extring delim = extring.set_static_string("/");
 		dbname = extring.set_static_string("incremental");
 		tblname = extring.set_static_string("default");
@@ -26,6 +27,7 @@ public class shotodol.filedb.FileDBIncremental : DB {
 				tblname.zero_terminate();
 			}
 		}
+		bags = bgf;
 	}
 	~FileDBIncremental() {
 	}
@@ -57,26 +59,37 @@ function filedb_database_insert($db, $tbl, $more) {
 }
 
  */
-	public override int save(DBId id, DBEntry entry) {
+	public override int save(DBId id, Bag entry) {
 		extring tbldir = extring();
-		if(FileDBIO.buildTableDir(&dbname, &tblname, &tbldir) == -1) {
+		if(FileDBIO.buildTableDir(&dbname, &tblname, &tbldir, true) == -1) {
 			return -1;
 		}
-		int index = 0;
-		index = FileDBIO.autoIncrement(&tbldir);
+		aroop_hash index = id.hash;
+		if(index == 0)index = FileDBIO.autoIncrement(&tbldir);
 
 		extring xfile = extring.stack(tbldir.length()+32); 
-		xfile.printf("%s/%d", tbldir.to_string(), index);
+		xfile.printf("%s/%u", tbldir.to_string(), index);
 		FileDBIO.writeEntryToBinaryFile(&xfile, entry);
 		return 0;
 	}
 
-	public override DBEntry? remove(DBId id, DBEntry entry) {
+	public override Bag? remove(DBId id, Bag entry) {
 		return null;
 	}
 
-	public override DBEntry? load(DBId id) {
-		return null;
+	public override Bag? load(DBId id) {
+		extring tbldir = extring();
+		if(FileDBIO.buildTableDir(&dbname, &tblname, &tbldir) == -1) {
+			return null;
+		}
+		aroop_hash index = id.hash;
+		if(index == 0) return null;
+
+		extring xfile = extring.stack(tbldir.length()+32); 
+		xfile.printf("%s/%u", tbldir.to_string(), index);
+		Bag ret = bags.createBag(512);
+		FileDBIO.readEntryFromBinaryFile(&xfile, ret);
+		return ret;
 	}
 }
 /** @}*/

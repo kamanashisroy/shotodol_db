@@ -6,10 +6,10 @@ using shotodol.db;
  *  @{
  */
 internal class shotodol.memorydb.MemoryDBIncremental : DB {
-	ArrayList<DBEntry>db;
+	ArrayList<Bag>db;
 	uint counter;
 	public MemoryDBIncremental() {		
-		db = ArrayList<DBEntry>();
+		db = ArrayList<Bag>();
 		counter = 0;
 	}
 	
@@ -17,7 +17,7 @@ internal class shotodol.memorydb.MemoryDBIncremental : DB {
 		db.destroy();
 	}
 
-	public override int insert(DBEntry entry, DBId*newId) {
+	public override int insert(Bag entry, DBId*newId) {
 		uint index = counter;
 		db.set(index, entry);
 		newId.hash = index;
@@ -25,18 +25,18 @@ internal class shotodol.memorydb.MemoryDBIncremental : DB {
 		return (int)index;
 	}
 	
-	public override int save(DBId id, DBEntry entry) {
+	public override int save(DBId id, Bag entry) {
 		db.set(id.hash, entry);
 		return 0;
 	}
 	
-	public override DBEntry? remove(DBId id, DBEntry entry) {
+	public override Bag? remove(DBId id, Bag entry) {
 		db.set(id.hash, null);
 		return null;
 	}
 	
-	public override DBEntry? load(DBId id) {
-		return (DBEntry)db.get(id.hash);
+	public override Bag? load(DBId id) {
+		return (Bag)db.get(id.hash);
 	}
 }
 /** @}*/

@@ -9,33 +9,36 @@ using shotodol;
 /** \addtogroup db
  *  @{
  */
+public struct shotodol.db.DBId {
+	aroop_hash hash;
+}
 public abstract class shotodol.db.DB : Replicable {
 	/*public enum DBType {
 		DB_IS_REMOTE = 1,
 		DB_IS_LOCAL = 1<<1,
 		DB_IS_SHARED = 1<<2,
 	}*/
-	public virtual int insert(DBEntry entry, DBId*newId) {
+	public virtual int insert(Bag entry, DBId*newId) {
 		core.die("unimplemented");
 		return 0;
 	}
 	
-	public virtual int save(DBId id, DBEntry entry) {
+	public virtual int save(DBId id, Bag entry) {
 		core.die("unimplemented");
 		return 0;
 	}
 	
-	public virtual DBEntry? remove_by_hash(DBId id) {
+	public virtual Bag? remove_by_hash(DBId id) {
 		core.die("unimplemented");
 		return null;
 	}
 	
-	public virtual DBEntry? remove(DBId id, DBEntry entry) {
+	public virtual Bag? remove(DBId id, Bag entry) {
 		core.die("unimplemented");
 		return null;
 	}
 	
-	public virtual DBEntry? load(DBId id) {
+	public virtual Bag? load(DBId id) {
 		core.die("unimplemented");
 		return null;
 	}

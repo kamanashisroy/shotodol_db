@@ -13,6 +13,7 @@ internal class shotodol.db.DBCommand : M100Command {
 		VALUE,
 		DB_STR,
 	}
+	BagFactoryImpl bags;
 	public DBCommand() {
 		var prefix = extring.set_static_string("db");
 		base(&prefix);
@@ -21,6 +22,7 @@ internal class shotodol.db.DBCommand : M100Command {
 		addOptionString("-nm", M100Command.OptionType.TXT, Options.KEY, "Key name"); 
 		addOptionString("-val", M100Command.OptionType.TXT, Options.VALUE, "Value"); 
 		addOptionString("-dbstr", M100Command.OptionType.TXT, Options.DB_STR, "Database string denoted as db/memory/incremental/dbname/tablename or db/filedb/incremental/dbname/tablename "); 
+		bags = new BagFactoryImpl();
 	}
 	DB? getDB(extring*dbstr = null) {
 		extring dbpath = extring.set_static_string("db/memory/incremental/shake");
@@ -83,16 +85,17 @@ internal class shotodol.db.DBCommand : M100Command {
 #endif
 				return 0;
 			}
-			dbd.hash = 10;
+			dbd.hash = 0;
 			xtring?nm = vals[Options.KEY];
 			xtring?vl = vals[Options.VALUE];
 			if(nm == null || vl  == null)
 				return 0;
-			DBEntry entry = DBEntryFactory.createEntry();
-			entry.build(dbd);
-			//DBEntry entry = new DBEntry(dbd);
-			entry.addETxt(Options.KEY, nm);
-			entry.addETxt(Options.VALUE, vl);
+			Bag entry = bags.createBag(512);
+			Bundler bndlr = Bundler();
+			bndlr.buildFromCarton(&entry.msg, entry.size);
+			bndlr.writeEXtring(Options.KEY, nm);
+			bndlr.writeEXtring(Options.VALUE, vl);
+			entry.finalize(&bndlr);
 			db.save(dbd,entry);
 			return 0;
 		} else {
