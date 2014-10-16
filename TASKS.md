@@ -1,7 +1,7 @@
 Roadmap
 ===========
 
-- [ ] Implement a filedb
+- [-] Implement a filedb
 	- [ ] Write test code.
-- [ ] Write a command interface for db.
+- [-] Write a command interface for db.
 - [ ] Know more about dbus and systemd projects.

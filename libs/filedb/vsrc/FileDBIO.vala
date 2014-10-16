@@ -61,6 +61,7 @@ function filedb_readfile($file) {
 		}
 		extring data = extring();
 		content.getContentAs(&data);
+		data.setLength(0);
 		fi.read(&data);
 		content.size = data.length();
 		fi.close();

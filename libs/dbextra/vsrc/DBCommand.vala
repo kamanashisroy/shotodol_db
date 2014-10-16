@@ -18,7 +18,7 @@ internal class shotodol.db.DBCommand : M100Command {
 		var prefix = extring.set_static_string("db");
 		base(&prefix);
 		addOptionString("-i", M100Command.OptionType.NONE, Options.INSERT, "Insert db content, eg. db -i -nm name -val value"); 
-		addOptionString("-v", M100Command.OptionType.NONE, Options.VIEW, "View db content"); 
+		addOptionString("-v", M100Command.OptionType.INT, Options.VIEW, "View db content by index"); 
 		addOptionString("-nm", M100Command.OptionType.TXT, Options.KEY, "Key name"); 
 		addOptionString("-val", M100Command.OptionType.TXT, Options.VALUE, "Value"); 
 		addOptionString("-dbstr", M100Command.OptionType.TXT, Options.DB_STR, "Database string denoted as db/memory/incremental/dbname/tablename or db/filedb/incremental/dbname/tablename "); 
@@ -98,8 +98,35 @@ internal class shotodol.db.DBCommand : M100Command {
 			entry.finalize(&bndlr);
 			db.save(dbd,entry);
 			return 0;
-		} else {
-			// TODO view db
+		}
+
+		ex = vals[Options.VIEW];
+		if(ex != null) {
+			DB?db = null;
+			DBId dbd = DBId();
+			xtring?dbstr = vals[Options.DB_STR];
+			db = getDB(dbstr);
+			if(db == null) {
+#if DB_DEBUG
+				extring dlg = extring.stack(128);
+				dlg.printf("Could not create db:[%s]\n", dbstr.fly().to_string());
+				Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.LOG, 0, 0, &dlg);
+#endif
+				return 0;
+			}
+			dbd.hash = ex.fly().to_int();
+			Bag?entry = db.load(dbd);
+			if(entry == null)
+				return 0;
+			Unbundler ubndlr = Unbundler();
+			ubndlr.buildFromCarton(&entry.msg, entry.size);
+			extring nl = extring.set_static_string("\n");
+			while(ubndlr.next() != -1) {
+				extring val = extring();
+				ubndlr.getEXtring(&val);
+				pad.write(&val);
+				pad.write(&nl);
+			}
 		}
 		return 0;
 	}
