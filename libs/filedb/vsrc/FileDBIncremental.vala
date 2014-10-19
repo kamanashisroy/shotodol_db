@@ -59,6 +59,18 @@ function filedb_database_insert($db, $tbl, $more) {
 }
 
  */
+	public override int insert(Bag entry, DBId*newId) {
+		extring tbldir = extring();
+		if(newId == null || FileDBIO.buildTableDir(&dbname, &tblname, &tbldir, true) == -1) {
+			return -1;
+		}
+		aroop_hash index = FileDBIO.autoIncrement(&tbldir);
+
+		DBId xid = DBId();
+		xid.hash = index;
+		save(xid, entry);
+		return 0;
+	}
 	public override int save(DBId id, Bag entry) {
 		extring tbldir = extring();
 		if(FileDBIO.buildTableDir(&dbname, &tblname, &tbldir, true) == -1) {
