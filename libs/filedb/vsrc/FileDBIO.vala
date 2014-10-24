@@ -163,7 +163,7 @@ function filedb_writefile($file, $x) {
 		dir.concat_char('/');
 		dir.concat(db);
 		dir.zero_terminate(); // this is important
-		if(!FileUtil.exists(&dir) && !create && !FileUtil.mkdir(&dir, 0777)) {
+		if(!FileUtil.exists(&dir) && create && !FileUtil.mkdir(&dir, 0777)) {
 #if DB_DEBUG
 			dlg.printf("Failed to create directory:[%d][%s]\n", dir.length(), dir.to_string());
 			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
@@ -173,7 +173,7 @@ function filedb_writefile($file, $x) {
 		dir.concat_char('/');
 		dir.concat(tbl);
 		dir.zero_terminate(); // this is important
-		if(!FileUtil.exists(&dir) && !create && !FileUtil.mkdir(&dir, 0777)) {
+		if(!FileUtil.exists(&dir) && create && !FileUtil.mkdir(&dir, 0777)) {
 #if DB_DEBUG
 			dlg.printf("Failed to create directory:[%d][%s]\n", dir.length(), dir.to_string());
 			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);

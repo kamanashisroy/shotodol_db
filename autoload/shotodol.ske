@@ -7,5 +7,5 @@ onLoad:
 	module -load libs/filedb/dynalib.so
 	module -load libs/dbextra/dynalib.so
 	rehash
-
+	db -i 48 -nm a -val b -dbstr db/filedb/hashmap/test/case
 

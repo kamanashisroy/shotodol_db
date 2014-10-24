@@ -6,7 +6,7 @@ using shotodol_platform_fileutils;
 /** \addtogroup filedb
  *  @{
  */
-public class shotodol.filedb.FileDBIncremental : DB {
+internal class shotodol.filedb.FileDBIncremental : DB {
 	extring dbname;
 	extring tblname;
 	BagFactoryImpl bags;
@@ -68,8 +68,8 @@ function filedb_database_insert($db, $tbl, $more) {
 
 		DBId xid = DBId();
 		xid.hash = index;
-		save(xid, entry);
-		return 0;
+		newId.hash = index;
+		return save(xid, entry);
 	}
 	public override int save(DBId id, Bag entry) {
 		extring tbldir = extring();
