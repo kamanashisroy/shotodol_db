@@ -1,6 +1,7 @@
 using aroop;
 using shotodol;
 using shotodol.db;
+using shotodol_platform_fileutils;
 
 /** \addtogroup filedb
  *  @{
@@ -60,6 +61,9 @@ internal class shotodol.filedb.FileDBHashMap : DB {
 		aroop_hash index = id.hash;
 		extring xfile = extring.stack(tbldir.length()+32); 
 		xfile.printf("%s/%X", tbldir.to_string(), index);
+		if(!FileUtil.exists(&xfile)) {
+			return null;
+		}
 		Bag ret = bags.createBag(512);
 		FileDBIO.readEntryFromBinaryFile(&xfile, ret);
 		return ret;

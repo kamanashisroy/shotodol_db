@@ -99,6 +99,9 @@ function filedb_database_insert($db, $tbl, $more) {
 
 		extring xfile = extring.stack(tbldir.length()+32); 
 		xfile.printf("%s/%u", tbldir.to_string(), index);
+		if(!FileUtil.exists(&xfile)) {
+			return null;
+		}
 		Bag ret = bags.createBag(512);
 		FileDBIO.readEntryFromBinaryFile(&xfile, ret);
 		return ret;
