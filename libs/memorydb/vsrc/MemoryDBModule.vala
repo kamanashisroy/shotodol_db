@@ -19,9 +19,9 @@ public class shotodol.memorydb.MemoryDBModule : DynamicModule {
 	public override int init() {
 		//DBEntryFactory.init();
 		extring entry = extring.set_static_string("db/memory/incremental");
-		Plugin.register(&entry, new HookExtension(onBuildMemoryDBIncrementalHook, this));
+		PluginManager.register(&entry, new HookExtension(onBuildMemoryDBIncrementalHook, this));
 		entry.rebuild_and_set_static_string("db/memory/hashmap");
-		Plugin.register(&entry, new HookExtension(onBuildMemoryDBHashMapHook, this));
+		PluginManager.register(&entry, new HookExtension(onBuildMemoryDBHashMapHook, this));
 		return 0;
 	}
 	int onBuildMemoryDBIncrementalHook(extring*msg, extring*output) {
@@ -30,7 +30,7 @@ public class shotodol.memorydb.MemoryDBModule : DynamicModule {
 		extring dbentry = extring.stack(128);
 		dbentry.concat_string("db/memory/incremental/");
 		dbentry.concat(msg);
-		Plugin.register(&dbentry, new AnyInterfaceExtension(new MemoryDBIncremental(), this));
+		PluginManager.register(&dbentry, new AnyInterfaceExtension(new MemoryDBIncremental(), this));
 		return 0;
 	}
 	int onBuildMemoryDBHashMapHook(extring*msg, extring*output) {
@@ -39,7 +39,7 @@ public class shotodol.memorydb.MemoryDBModule : DynamicModule {
 		extring dbentry = extring.stack(128);
 		dbentry.concat_string("db/memory/hashmap/");
 		dbentry.concat(msg);
-		Plugin.register(&dbentry, new AnyInterfaceExtension(new MemoryDBHashMap(), this));
+		PluginManager.register(&dbentry, new AnyInterfaceExtension(new MemoryDBHashMap(), this));
 		return 0;
 	}
 	public override int deinit() {

@@ -30,7 +30,7 @@ internal class shotodol.db.DBCommand : M100Command {
 			dbpath.rebuild_and_copy_shallow(dbstr);
 		}
 		DB?db = null;
-		Plugin.acceptVisitor(&dbpath, (x) => {
+		PluginManager.acceptVisitor(&dbpath, (x) => {
 			db = (DB)x.getInterface(null);
 		});
 		if(db == null) {
@@ -65,9 +65,9 @@ internal class shotodol.db.DBCommand : M100Command {
 				dbname.rebuild_and_set_static_string("shake");
 			}
 			extring unused = extring();
-			Plugin.swarm(&dbtp, &dbname, &unused);
+			PluginManager.swarm(&dbtp, &dbname, &unused);
 		}
-		Plugin.acceptVisitor(&dbpath, (x) => {
+		PluginManager.acceptVisitor(&dbpath, (x) => {
 			db = (DB)x.getInterface(null);
 		});
 		return db;
