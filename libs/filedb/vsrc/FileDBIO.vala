@@ -38,8 +38,8 @@ function filedb_readfile($file) {
 #endif
 			return -1;
 		}
-		if(contentoutput.size() >= 512) {
-			contentoutput.setLength(0);
+		if(contentoutput.capacity() >= 512) {
+			contentoutput.set_length(0);
 		} else {
 			contentoutput.rebuild_in_heap(512);
 		}
@@ -61,7 +61,7 @@ function filedb_readfile($file) {
 		}
 		extring data = extring();
 		content.getContentAs(&data);
-		data.setLength(0);
+		data.set_length(0);
 		fi.read(&data);
 		content.size = data.length();
 		fi.close();

@@ -6,9 +6,9 @@ using shotodol.db;
  *  @{
  */
 internal class shotodol.memorydb.MemoryDBHashMap : DB {
-	SearchableSet<Bag>db;
+	SearchableOPPList<Bag>db;
 	public MemoryDBHashMap() {		
-		db = SearchableSet<Bag>();
+		db = SearchableOPPList<Bag>();
 	}
 	
 	~MemoryDBHashMap() {		
@@ -18,13 +18,13 @@ internal class shotodol.memorydb.MemoryDBHashMap : DB {
 #if false
 	public override int insert(Bag entry, DBId*newId) {
 		core.die("unimplemented");
-		db.addPointer(entry, id.hash);
+		db.add_pointer(entry, id.hash);
 		return 0;
 	}
 #endif
 	
 	public override int save(DBId id, Bag entry) {
-		db.addPointer(entry, id.hash);
+		db.add_pointer(entry, id.hash);
 		return 0;
 	}
 	
