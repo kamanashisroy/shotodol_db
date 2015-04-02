@@ -87,7 +87,7 @@ internal class shotodol.db.DBCommand : M100Command {
 #if DB_DEBUG
 				extring dlg = extring.stack(128);
 				dlg.printf("Could not create db:[%s]\n", dbstr.fly().to_string());
-				Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.LOG, 0, 0, &dlg);
+				Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.LOG, 0, 0, &dlg);
 #endif
 				return 0;
 			}
@@ -116,7 +116,7 @@ internal class shotodol.db.DBCommand : M100Command {
 #if DB_DEBUG
 				extring dlg = extring.stack(128);
 				dlg.printf("Could not create db:[%s]\n", dbstr.fly().to_string());
-				Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.LOG, 0, 0, &dlg);
+				Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.LOG, 0, 0, &dlg);
 #endif
 				return 0;
 			}

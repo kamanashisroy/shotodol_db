@@ -29,7 +29,7 @@ internal class shotodol.memorydb.MemoryDBHashMap : DB {
 	}
 	
 	public override Bag? remove(DBId id, Bag entry) {
-		db.prune(id.hash, entry);
+		db.prune_does_not_work(entry, id.hash);
 		return null;
 	}
 	

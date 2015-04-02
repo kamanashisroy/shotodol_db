@@ -34,7 +34,7 @@ function filedb_readfile($file) {
 #if DB_DEBUG
 			extring dlg = extring.stack(filepath.length()+32);
 			dlg.printf("Unable to open file for reading:[%d][%s]\n", filepath.length(), filepath.to_string());
-			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
+			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.ERROR, 0, 0, &dlg);
 #endif
 			return -1;
 		}
@@ -55,7 +55,7 @@ function filedb_readfile($file) {
 #if DB_DEBUG
 			extring dlg = extring.stack(filepath.length()+32);
 			dlg.printf("Unable to open file for reading:[%d][%s]\n", filepath.length(), filepath.to_string());
-			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
+			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.ERROR, 0, 0, &dlg);
 #endif
 			return -1;
 		}
@@ -115,7 +115,7 @@ function filedb_writefile($file, $x) {
 #if DB_DEBUG
 			extring dlg = extring.stack(filepath.length()+32);
 			dlg.printf("Unable to open file for writing:[%d][%s]\n", filepath.length(), filepath.to_string());
-			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
+			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.ERROR, 0, 0, &dlg);
 #endif
 			return -1;
 		}
@@ -131,7 +131,7 @@ function filedb_writefile($file, $x) {
 #if DB_DEBUG
 			extring dlg = extring.stack(filepath.length()+32);
 			dlg.printf("Unable to open file for writing:[%d][%s]\n", filepath.length(), filepath.to_string());
-			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
+			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.ERROR, 0, 0, &dlg);
 #endif
 			return -1;
 		}
@@ -147,14 +147,14 @@ function filedb_writefile($file, $x) {
 #if DB_DEBUG
 		extring dlg = extring.stack(128);
 		dlg.printf("Building db:[%d][%s], tbl:[%d][%s]\n", db.length(), db.to_string(), tbl.length(), tbl.to_string());
-		Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.LOG, 0, 0, &dlg);
+		Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.LOG, 0, 0, &dlg);
 #endif
 		outtbl.destroy();
 		extring FILEDB_HOME = extring.set_static_string(".data");
 		if(!FileUtil.exists(&FILEDB_HOME) && !create && !FileUtil.mkdir(&FILEDB_HOME, 0777)) {
 #if DB_DEBUG
 			dlg.printf("Failed to create directory:[%d][%s]\n", FILEDB_HOME.length(), FILEDB_HOME.to_string());
-			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
+			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.ERROR, 0, 0, &dlg);
 #endif
 			return -1;
 		}
@@ -166,7 +166,7 @@ function filedb_writefile($file, $x) {
 		if(!FileUtil.exists(&dir) && create && !FileUtil.mkdir(&dir, 0777)) {
 #if DB_DEBUG
 			dlg.printf("Failed to create directory:[%d][%s]\n", dir.length(), dir.to_string());
-			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
+			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.ERROR, 0, 0, &dlg);
 #endif
 			return -1;
 		}
@@ -176,7 +176,7 @@ function filedb_writefile($file, $x) {
 		if(!FileUtil.exists(&dir) && create && !FileUtil.mkdir(&dir, 0777)) {
 #if DB_DEBUG
 			dlg.printf("Failed to create directory:[%d][%s]\n", dir.length(), dir.to_string());
-			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.WatchdogSeverity.ERROR, 0, 0, &dlg);
+			Watchdog.watchit(core.sourceFileName(), core.sourceLineNo(), 3, Watchdog.Severity.ERROR, 0, 0, &dlg);
 #endif
 			return -1;
 		}
